@@ -21,6 +21,7 @@ The system supports both macOS and Windows platforms via Docker.
 
 ## 📁 Project Structure
 
+```text
 Software-driven-SHP/
 ├── app/                      → Main application logic
 │   ├── models/               → Model weights (YOLO face / gesture)
@@ -33,6 +34,7 @@ Software-driven-SHP/
 ├── Detailed_Simulation_recogface_finger_yolo.slx → Simulink test
 └── README.md  
 
+```
 ---
 
 ## 🐳 Docker Setup
