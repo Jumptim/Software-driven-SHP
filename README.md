@@ -23,14 +23,14 @@ The system supports both macOS and Windows platforms via Docker.
 
 Software-driven-SHP/
 ├── app/                      → Main application logic
-│   ├── models/               → Model weights (YOLO face / gesture)
-│   ├── whitelist_data/       → Encodings and authorized names
-│   └── whitelist_images/     → Reference images for whitelist
-├── docker/                   → Dockerfile and dependencies
-├── scripts/                  → Bash scripts (build/run/manage)
-├── host_client/              → Windows client programs
-├── docs/                     → Manuals (Mac + Windows)
-├── Detailed_Simulation_recogface_finger_yolo.slx → Simulink test
+│   ├── models/               → Model weights (YOLO face / gesture)
+│   ├── whitelist_data/       → Encodings and authorized users
+│   └── whitelist_images/     → Reference images for whitelist
+├── docker/                   → Dockerfile and dependencies
+├── scripts/                  → Bash scripts (build/run/manage)
+├── host_client/              → Windows client programs
+├── docs/                     → Manuals (Mac + Windows)
+├── Detailed_Simulation_recogface_finger_yolo.slx → Simulink test
 └── README.md  
 
 ---
