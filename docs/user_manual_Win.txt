@@ -1,0 +1,171 @@
+============================================================
+FACE RECOGNITION PROJECT – USER MANUAL
+============================================================
+
+============================================================
+II.  WINDOWS (LAB / USB EDITION)
+============================================================
+
+1. Preparation
+--------------
+- Windows 10/11 PC with Docker Desktop (WSL2 enabled)
+- Python 3.9+ installed (for camera client)
+- Copy folder face_recognition_project_docker/ from USB to PC
+- Working webcam
+- MATLAB / Simulink (optional)
+
+------------------------------------------------------------
+
+2. Copy and Open Project Folder
+-------------------------------
+Copy to a fast local disk:
+    D:\face_recognition_project_docker → C:\Users\<YourName>\Desktop\
+
+Open PowerShell:
+    cd C:\Users\<YourName>\Desktop\face_recognition_project_docker
+
+------------------------------------------------------------
+
+**If a Docker image already exists on the USB drive**
+------------------------------------------------------
+If your USB drive already contains the prebuilt image file 
+(for example `face-recognition-infer.tar`), you can directly load it
+instead of building again:
+
+    docker load -i <USB_DRIVE>:\face-recognition-infer.tar
+
+After import, verify:
+
+    docker images
+
+If you see `face-recognition-infer:latest`, you can skip the build step
+and continue from Section 6 (Run Main Functions).
+
+------------------------------------------------------------
+
+3. Build Docker Image
+---------------------
+If you do not have a pre-saved image:
+    docker build -t face-recognition-infer -f docker\Dockerfile .
+
+When finished:
+    Successfully tagged face-recognition-infer:latest
+
+------------------------------------------------------------
+
+4. View / Delete Images and Containers
+--------------------------------------
+List all images:
+    docker images
+List containers:
+    docker ps -a
+Delete image:
+    docker rmi face-recognition-infer
+Clean unused cache:
+    docker system prune -f
+
+------------------------------------------------------------
+
+5. Rebuild After Editing Code
+-----------------------------
+If you modified app/ Python files AND your run command
+includes “-v %cd%\app:/app”, no rebuild is required.
+
+If you changed Dockerfile, requirements.txt,
+or entrypoint.sh → rebuild:
+
+    docker build -t face-recognition-infer -f docker\Dockerfile .
+
+------------------------------------------------------------
+
+6. Run Main Functions
+---------------------
+(Assuming Docker Desktop is running)
+
+Recognition service (backend):
+    bash scripts/run_recog.sh
+
+Local camera recognition (client + UDP):
+    python host_client\camera_gateway.py
+
+Registration service (Docker):
+    bash scripts/run_add.sh
+
+Camera registration client:
+    python host_client\camera_gateway_addwhitelist.py
+
+Whitelist manager:
+    bash scripts/run_manage.sh
+
+------------------------------------------------------------
+
+7. Add New Person
+-----------------
+Using camera:
+    1) bash scripts/run_add.sh
+    2) python host_client\camera_gateway_addwhitelist.py
+       Follow prompt “Press Enter to capture”.
+
+Using images:
+    1) Copy photos to app\whitelist_images\<person_name>\
+    2) bash scripts/run_manage.sh → option 2 → choose folder.
+
+------------------------------------------------------------
+
+8. Real‑time Test with MATLAB
+------------------------------
+1) bash scripts/run_recog.sh
+2) python host_client\camera_gateway.py
+3) In Simulink → UDP Receive (port 5005, uint8, size 1)
+   “Finger Up” → Scope shows 1
+   Console → prints “Sent button=1 (Face+FingerUp)”.
+
+------------------------------------------------------------
+
+9. Stopping and Cleaning
+------------------------
+Press Ctrl + C to stop.
+Remove unused containers/images:
+    docker system prune -f
+
+------------------------------------------------------------
+
+10. Updating or Reusing the Image
+---------------------------------
+If you want to save the current Docker image to a USB drive 
+and reuse it on another computer (for example copy to Windows D:\):
+
+1) Save the image to the USB drive:
+    docker save -o <USB_DRIVE>:\face-recognition-infer.tar face-recognition-infer
+   Example:
+    docker save -o E:\face-recognition-infer.tar face-recognition-infer
+
+2) Copy the file `face-recognition-infer.tar` from the USB 
+   to the target Windows computer (e.g., D:\face-recognition-infer.tar)
+
+3) On the Windows computer, import the image:
+    docker load -i D:\face-recognition-infer.tar
+
+4) Check the image:
+    docker images
+
+If you see `face-recognition-infer:latest`, 
+you can run all scripts directly without rebuilding.
+
+------------------------------------------------------------
+
+11. Transfer Back to USB
+------------------------
+After lab work, copy back to USB:
+    app\whitelist_data\
+    app\whitelist_list.txt
+
+These hold updated whitelist info.
+
+------------------------------------------------------------
+End of WINDOWS (LAB) Edition
+------------------------------------------------------------
+
+============================================================
+END OF USER MANUAL
+============================================================

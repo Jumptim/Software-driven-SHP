@@ -1,0 +1,176 @@
+============================================================
+FACE RECOGNITION PROJECT – USER MANUAL
+============================================================
+
+============================================================
+I.  MAC EDITION
+============================================================
+
+1. Project Overview
+-------------------
+This project performs face recognition + hand‑gesture detection
+and sends a UDP signal (0 or 1) to MATLAB/Simulink.
+
+Root folder:
+~/Desktop/face_recognition_project_docker
+
+------------------------------------------------------------
+
+2. Requirements
+---------------
+- macOS 12 or newer
+- Docker Desktop for Mac (running)
+- Python 3.9 for local scripts
+- Camera permission enabled:
+  System Settings → Privacy → Camera → allow “Terminal”
+- MATLAB / Simulink (optional for UDP testing)
+
+------------------------------------------------------------
+
+3. Directory Structure
+----------------------
+face_recognition_project_docker/
+├── docker/                 → Dockerfile, requirements, entrypoint
+├── app/                    → Application code
+│   ├── models/             → YOLO model weights
+│   ├── whitelist_data/     → Encodings, names, person list
+│   └── whitelist_images/   → Sub‑folders for image import
+└── scripts/                → Helper bash scripts
+
+------------------------------------------------------------
+
+4. Build the Docker Image
+-------------------------
+Initial build:
+    cd ~/Desktop/face_recognition_project_docker
+    docker build -t face-recognition-infer -f docker/Dockerfile .
+
+Expected message:
+    Successfully tagged face-recognition-infer:latest
+
+View existing images:
+    docker images
+
+Remove an old image:
+    docker rmi face-recognition-infer
+
+List running containers:
+    docker ps
+
+Clean unused containers/images:
+    docker system prune -f
+
+------------------------------------------------------------
+
+5. Rebuild After Code Changes
+-----------------------------
+If you modify any file copied into the image
+(e.g., Dockerfile, requirements.txt, entrypoint.sh),
+rebuild with:
+    docker build -t face-recognition-infer -f docker/Dockerfile .
+
+If you only edit Python scripts inside app/ and your run scripts
+mount “-v $(pwd)/app:/app”, rebuilding is NOT required
+(the change takes effect immediately).
+
+------------------------------------------------------------
+
+6. Quick Run Scripts
+--------------------
+cd ~/Desktop/face_recognition_project_docker
+chmod +x scripts/*.sh
+
+Main scripts:
+  Build image again          -> docker build -t face-recognition-infer -f docker/Dockerfile .
+  Recognition service (Docker) -> bash scripts/run_recog.sh
+  Local camera recognition (Python + UDP) -> bash scripts/start_camera.sh
+  Registration service (Docker) -> bash scripts/run_add.sh
+  Camera registration client -> bash scripts/start_camera_add.sh
+  Manage whitelist -> bash scripts/run_manage.sh
+  Unified menu -> bash scripts/menu.sh
+
+------------------------------------------------------------
+
+7. Typical Workflow on Mac
+--------------------------
+1. Launch Docker Desktop.
+2. Build the image (first time or after major edits).
+3. bash scripts/run_recog.sh  →  server ready on port 9000.
+4. bash scripts/start_camera.sh →  camera window + “Sent button=0/1”.
+5. (Optional) Configure Simulink:
+   UDP Receive on port 5005 (uint8, size 1).
+6. Press Ctrl + C to stop.
+
+------------------------------------------------------------
+
+8. Checking / Deleting Images and Containers
+--------------------------------------------
+View images:
+    docker images
+View containers:
+    docker ps -a
+Remove one:
+    docker rm <CONTAINER_ID>
+    docker rmi <IMAGE_ID>
+
+------------------------------------------------------------
+
+9. Add or Manage Whitelist
+--------------------------
+Add via camera (five angles):
+    bash scripts/run_add.sh
+    bash scripts/start_camera_add.sh
+
+Add via images:
+    bash scripts/run_manage.sh  →  option 2
+
+Show current list:
+    option 1
+
+Delete a person:
+    option 3
+
+View text list:
+    cat app/whitelist_data/whitelist_list.txt
+
+Every change automatically updates whitelist_list.txt.
+
+------------------------------------------------------------
+
+10. MATLAB Simulink UDP Test (optional)
+---------------------------------------
+- UDP Receive block: port = 5005, type = uint8, size = 1
+- Connect to Scope
+- Value “1” appears when face + finger up detected.
+
+------------------------------------------------------------
+
+11. Save Image to USB or Reuse on Another Computer
+--------------------------------------------------
+To save the current Docker image to a USB drive (for example drive E:):
+
+    docker save -o /Volumes/wzy/face-recognition-infer.tar face-recognition-infer
+
+You can later load this image on another Mac or Windows computer using:
+
+    docker load -i /Volumes/wzy/face-recognition-infer.tar
+
+Check the loaded image:
+
+    docker images
+
+If “face-recognition-infer:latest” appears, use it directly without rebuilding.
+
+------------------------------------------------------------
+
+12. Cleanup and Backup
+----------------------
+Clean cache:
+    docker system prune -f
+
+Backup project:
+    zip -r face_project_backup.zip app docker scripts
+
+------------------------------------------------------------
+End of MAC Edition
+------------------------------------------------------------
