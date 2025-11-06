@@ -22,6 +22,7 @@ The system supports both macOS and Windows platforms via Docker.
 ## 📁 Project Structure
 
 Software-driven-SHP/
+
 ├── app/                      → Main application logic  
 │   ├── models/               → Model weights (YOLO face / gesture)  
 │   ├── whitelist_data/       → Encodings and authorized names  
