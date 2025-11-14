@@ -1,6 +1,3 @@
-cd ~/Software-driven-SHP
-
-cat > README.md << 'EOF'
 # 🧠 Software‑driven‑SHP: Face Recognition and Hand Gesture Detection
 
 This project performs **real‑time face recognition** and **hand gesture detection**
@@ -96,5 +93,4 @@ Platform: macOS 12+ / Windows 10+ / Docker 24+
 
 ## 📜 License
 This repository is for academic and research use only.  
-Please cite appropriately in derived works.  
-EOF
+Please cite appropriately in derived works.
